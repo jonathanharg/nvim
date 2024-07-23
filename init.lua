@@ -553,7 +553,6 @@ require('lazy').setup({
     'stevearc/conform.nvim',
     event = { 'BufWritePre' },
     cmd = { 'ConformInfo' },
-    lazy = false,
     keys = {
       {
         '<leader>f',
