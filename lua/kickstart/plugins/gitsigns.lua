@@ -48,10 +48,10 @@ return {
         map('n', '<leader>gR', gitsigns.reset_buffer, { desc = '[g]it [R]eset buffer' })
         map('n', '<leader>ghp', gitsigns.preview_hunk, { desc = '[g]it [h]unk [p]review' })
         map('n', '<leader>ghb', gitsigns.blame_line, { desc = '[g]it [h]unk [b]lame' })
-        map('n', '<leader>ghd', gitsigns.diffthis, { desc = '[g]it [h]unk [d]iff against index' }) -- Does this actually apply to a hunk?
-        map('n', '<leader>ghD', function()
+        map('n', '<leader>gd', gitsigns.diffthis, { desc = '[g]it [d]iff against index' })
+        map('n', '<leader>gD', function()
           gitsigns.diffthis '@'
-        end, { desc = '[g]it [h]unk [D]iff against last commit' }) -- Does this also count as a hunk?
+        end, { desc = '[g]it [D]iff against last commit' })
         -- Toggles
         map('n', '<leader>gb', gitsigns.toggle_current_line_blame, { desc = '[g]it [b]lame toggle' })
         map('n', '<leader>gd', gitsigns.toggle_deleted, { desc = '[g]it [D]eleted toggle' })

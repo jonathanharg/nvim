@@ -244,8 +244,10 @@ require('lazy').setup({
         { '<leader>s', group = '[S]earch' },
         { '<leader>w', group = '[W]orkspace' },
         { '<leader>t', group = '[T]oggle' },
+        { '<leader>h', group = '[H]arpoon' },
+        { '<leader>g', group = '[G]it', mode = { 'n', 'v' } },
         { '<leader>gh', group = '[G]it [H]unk', mode = { 'n', 'v' } },
-        { '<leader>s', group = '[S]ession' },
+        { '<leader>S', group = '[S]ession' },
       },
     },
   },
@@ -768,7 +770,6 @@ require('lazy').setup({
 
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
-  -- { 'ThePrimeagen/vim-be-good' },
 
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
