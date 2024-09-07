@@ -13,6 +13,13 @@ return {
       desc = '[S]ession [r]estore',
     },
     {
+      '<leader>Ss',
+      function()
+        require('persistence').select()
+      end,
+      desc = '[S]ession [s]elect',
+    },
+    {
       '<leader>Sl',
       function()
         require('persistence').load { last = true }
