@@ -42,6 +42,11 @@ vim.opt.undofile = true
 vim.opt.ignorecase = true
 vim.opt.smartcase = true
 
+-- Don't have `o` add a comment
+vim.api.nvim_create_autocmd('FileType', {
+  command = 'set formatoptions-=o',
+})
+
 -- Keep signcolumn on by default
 vim.opt.signcolumn = 'yes'
 
@@ -250,6 +255,7 @@ require('lazy').setup({
         { '<leader>g', group = '[G]it', mode = { 'n', 'v' } },
         { '<leader>gh', group = '[G]it [H]unk', mode = { 'n', 'v' } },
         { '<leader>S', group = '[S]ession' },
+        { '<leader>x', group = '[X]code' },
       },
     },
   },
@@ -816,7 +822,7 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'swift', 'vim', 'vimdoc' },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
