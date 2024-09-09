@@ -111,6 +111,15 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- Default to opening the current working directory if no files are specified
+vim.api.nvim_create_autocmd('VimEnter', {
+  callback = function()
+    if vim.fn.argc() == 0 then
+      require('oil').open()
+    end
+  end,
+})
+
 -- Keybinds to center page down and page up commands
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
@@ -256,6 +265,7 @@ require('lazy').setup({
         { '<leader>gh', group = '[G]it [H]unk', mode = { 'n', 'v' } },
         { '<leader>S', group = '[S]ession' },
         { '<leader>x', group = '[X]code' },
+        { '<leader>J', group = '[J]ira' },
       },
     },
   },
@@ -317,11 +327,9 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
+        defaults = {
+          path_display = { 'truncate' },
+        },
         -- pickers = {}
         extensions = {
           ['ui-select'] = {
