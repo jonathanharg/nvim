@@ -111,6 +111,14 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- Move Lines
+vim.keymap.set('n', '<A-j>', '<cmd>m .+1<cr>==', { desc = 'Move Down' })
+vim.keymap.set('n', '<A-k>', '<cmd>m .-2<cr>==', { desc = 'Move Up' })
+vim.keymap.set('i', '<A-j>', '<esc><cmd>m .+1<cr>==gi', { desc = 'Move Down' })
+vim.keymap.set('i', '<A-k>', '<esc><cmd>m .-2<cr>==gi', { desc = 'Move Up' })
+vim.keymap.set('v', '<A-j>', ":m '>+1<cr>gv=gv", { desc = 'Move Down' })
+vim.keymap.set('v', '<A-k>', ":m '<-2<cr>gv=gv", { desc = 'Move Up' })
+
 -- Default to opening the current working directory if no files are specified
 vim.api.nvim_create_autocmd('VimEnter', {
   callback = function()
@@ -539,7 +547,12 @@ require('lazy').setup({
       --  - settings (table): Override the default settings passed when initializing the server.
       --        For example, to see the options for `lua_ls`, you could go to: https://luals.github.io/wiki/settings/
       local servers = {
-        clangd = {},
+        clangd = {
+          on_attach = function()
+            require('clangd_extensions.inlay_hints').setup_autocmd()
+            require('clangd_extensions.inlay_hints').set_inlay_hints()
+          end,
+        },
         pyright = {},
         rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
@@ -678,6 +691,18 @@ require('lazy').setup({
       local cmp = require 'cmp'
       local luasnip = require 'luasnip'
       luasnip.config.setup {}
+      local s, t, i, f = luasnip.snippet, luasnip.text_node, luasnip.insert_node, luasnip.function_node
+
+      luasnip.add_snippets('all', {
+        s('fc', {
+          t 'JIH - ',
+          f(function()
+            return string.lower(os.date '%d-%b-%y')
+          end),
+          t ' - ',
+          i(1),
+        }),
+      })
 
       cmp.setup {
         snippet = {
