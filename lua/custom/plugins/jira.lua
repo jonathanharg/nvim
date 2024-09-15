@@ -3,7 +3,7 @@ local function loadEnv()
   local env = {}
   local file = io.open(envfile, 'r')
   if not file then
-    error('Could not open file: ' .. envfile)
+    return
   end
 
   for line in file:lines() do
@@ -22,6 +22,9 @@ return {
   dependencies = { 'nvim-lua/plenary.nvim' },
   config = function()
     local env = loadEnv()
+    if env == nil then
+      return
+    end
     require('jira').setup {
       domain = env['jira_domain'],
       user = env['jira_user'],
@@ -31,13 +34,16 @@ return {
   end,
   cond = function()
     local env = loadEnv()
+    if env == nil then
+      return false
+    end
     return env['jira_domain'] ~= nil and env['jira_user'] ~= nil and env['jira_api_token'] ~= nil and env['jira_project_key'] ~= nil
   end,
   keys = function()
     local jira = require 'jira'
     return {
-      { '<leader>Jv', jira.view_issue, desc = '[J]ira [v]iew issue' },
-      { '<leader>Jo', jira.open_issue, desc = '[J]ira [o]pen issue in browser' },
+      { '<leader>jv', jira.view_issue, desc = '[J]ira [v]iew issue' },
+      { '<leader>jo', jira.open_issue, desc = '[J]ira [o]pen issue in browser' },
     }
   end,
 }

@@ -257,7 +257,7 @@ require('lazy').setup({
         { '<leader>gh', group = '[G]it [H]unk', mode = { 'n', 'v' } },
         { '<leader>S', group = '[S]ession' },
         { '<leader>x', group = '[X]code' },
-        { '<leader>J', group = '[J]ira' },
+        { '<leader>j', group = '[J]ira' },
       },
     },
   },
