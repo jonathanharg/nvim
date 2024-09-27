@@ -177,7 +177,7 @@ vim.opt.rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
+  -- 'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -353,6 +353,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>gs', builtin.git_status, { desc = '[G]it [s]tatus' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -552,6 +553,11 @@ require('lazy').setup({
             require('clangd_extensions.inlay_hints').setup_autocmd()
             require('clangd_extensions.inlay_hints').set_inlay_hints()
           end,
+          cmd = {
+            'clangd',
+            '--limit-references=0',
+            '--limit-results=0',
+          },
         },
         pyright = {},
         rust_analyzer = {},
@@ -695,11 +701,11 @@ require('lazy').setup({
 
       luasnip.add_snippets('all', {
         s('fc', {
-          t 'JIH - ',
+          t 'JIH ',
           f(function()
-            return string.lower(os.date '%d-%b-%y')
+            return os.date '%d-%b-%y'
           end),
-          t ' - ',
+          t ': ',
           i(1),
         }),
       })
