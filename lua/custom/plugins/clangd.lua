@@ -28,6 +28,6 @@ return {
     },
   },
   keys = {
-    { 'gh', '<cmd>ClangdSwitchSourceHeader<cr>', desc = 'LSP: [G]oto [H]eader' },
+    { 'gh', '<cmd>ClangdSwitchSourceHeader<cr>', desc = 'Header' },
   },
 }

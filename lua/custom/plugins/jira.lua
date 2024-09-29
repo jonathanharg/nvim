@@ -42,8 +42,8 @@ return {
   keys = function()
     local jira = require 'jira'
     return {
-      { '<leader>jv', jira.view_issue, desc = '[J]ira [v]iew issue' },
-      { '<leader>jo', jira.open_issue, desc = '[J]ira [o]pen issue in browser' },
+      { '<leader>jv', jira.view_issue, desc = 'View issue' },
+      { '<leader>jo', jira.open_issue, desc = 'Open in browser' },
     }
   end,
 }

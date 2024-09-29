@@ -12,7 +12,7 @@ return {
         show_hidden = true,
       },
     }
-    vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
-    vim.keymap.set('n', '<space>-', require('oil').toggle_float, { desc = 'Open parent directory in floating window' })
+    vim.keymap.set('n', '-', '<CMD>Oil<CR>', { desc = 'Open Directory' })
+    vim.keymap.set('n', '<space>-', require('oil').toggle_float, { desc = 'Open Directory in Window' })
   end,
 }

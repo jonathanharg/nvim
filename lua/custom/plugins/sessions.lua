@@ -6,32 +6,32 @@ return {
   },
   keys = {
     {
-      '<leader>Sr',
+      '<leader>sr',
       function()
         require('persistence').load()
       end,
-      desc = '[S]ession [r]estore',
+      desc = 'Restore',
     },
     {
-      '<leader>Ss',
+      '<leader>ss',
       function()
         require('persistence').select()
       end,
-      desc = '[S]ession [s]elect',
+      desc = 'Select',
     },
     {
-      '<leader>Sl',
+      '<leader>sl',
       function()
         require('persistence').load { last = true }
       end,
-      desc = '[S]ession restore [l]ast',
+      desc = 'Restore Last',
     },
     {
-      '<leader>Sd',
+      '<leader>sd',
       function()
         require('persistence').stop()
       end,
-      desc = "[S]ession [d]on't save",
+      desc = "Don't Save",
     },
   },
 }
