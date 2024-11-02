@@ -373,6 +373,14 @@ require('lazy').setup({
       local capabilities = vim.lsp.protocol.make_client_capabilities()
       capabilities = vim.tbl_deep_extend('force', capabilities, require('cmp_nvim_lsp').default_capabilities())
 
+      if vim.g.have_nerd_font then
+        local signs = { Error = '', Warn = '', Hint = '', Info = '' }
+        for type, icon in pairs(signs) do
+          local hl = 'DiagnosticSign' .. type
+          vim.fn.sign_define(hl, { text = icon, texthl = hl, numhl = hl })
+        end
+      end
+
       local servers = {
         clangd = {
           on_attach = function()
@@ -601,35 +609,55 @@ require('lazy').setup({
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'swift', 'vim', 'vimdoc' },
-      -- Autoinstall languages that are not installed
+      ensure_installed = {
+        'asm',
+        'bash',
+        'c',
+        'cmake',
+        'cpp',
+        'css',
+        'disassembly',
+        'diff',
+        'fish',
+        'git_config',
+        'git_rebase',
+        'gitattributes',
+        'gitcommit',
+        'gitignore',
+        'glsl',
+        'html',
+        'hlsl',
+        'json',
+        'lua',
+        'luadoc',
+        'make',
+        'markdown',
+        'markdown_inline',
+        'objc',
+        'printf',
+        'query',
+        'regex',
+        'vim',
+        'vimdoc',
+      },
       auto_install = true,
       highlight = {
         enable = true,
-        -- Some languages depend on vim's regex highlighting system (such as Ruby) for indent rules.
-        --  If you are experiencing weird indenting issues, add the language to
-        --  the list of additional_vim_regex_highlighting and disabled languages for indent.
-        additional_vim_regex_highlighting = { 'ruby' },
       },
-      indent = { enable = true, disable = { 'ruby' } },
-      textobjects = {
-        move = {
-          enable = true,
-          -- TODO: these are broken
-          goto_next_start = { [']f'] = '@function.outer', [']c'] = '@class.outer' },
-          goto_next_end = { [']F'] = '@function.outer', [']C'] = '@class.outer' },
-          goto_previous_start = { ['[f'] = '@function.outer', ['[c'] = '@class.outer' },
-          goto_previous_end = { ['[F'] = '@function.outer', ['[C'] = '@class.outer' },
+      indent = { enable = true },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          -- WARN: For MacOS go to System Settings > Keyboard > Keyboard Shortcuts... > Input Sources
+          -- and disable 'Select the previous input source' and 'Select next source in Input menu'
+          -- otherwise keybinds will conflict
+          init_selection = '<C-space>',
+          node_incremental = '<C-space>',
+          scope_incremental = false,
+          node_decremental = '<bs>',
         },
       },
     },
-    -- TODO: incremental selection
-    -- There are additional nvim-treesitter modules that you can use to interact
-    -- with nvim-treesitter. You should go explore a few and see what interests you:
-    --
-    --    - Incremental selection: Included, see `:help nvim-treesitter-incremental-selection-mod`
-    --    - Show your current context: https://github.com/nvim-treesitter/nvim-treesitter-context
-    --    - Treesitter + textobjects: https://github.com/nvim-treesitter/nvim-treesitter-textobjects
   },
 
   require 'kickstart.plugins.debug',
