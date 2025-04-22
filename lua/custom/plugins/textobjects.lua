@@ -32,9 +32,6 @@ return {
 
             ['ac'] = { query = '@class.outer', desc = 'class' },
             ['ic'] = { query = '@class.inner', desc = 'class' },
-
-            ['ag'] = { query = '@feral', desc = 'feral guard' },
-            -- ['ig'] = { query = '@feral.inner', desc = 'feral guard' },
           },
         },
         move = {
@@ -46,7 +43,6 @@ return {
             [']c'] = { query = '@class.outer', desc = 'class' },
             [']i'] = { query = '@conditional.outer', desc = 'conditional/if' },
             [']l'] = { query = '@loop.outer', desc = 'loop' },
-            [']g'] = { query = '@feral', desc = 'feral guard' },
 
             -- You can pass a query group to use query from `queries/<lang>/<query_group>.scm file in your runtime path.
             -- Below example nvim-treesitter's `locals.scm` and `folds.scm`. They also provide highlights.scm and indent.scm.
@@ -59,7 +55,6 @@ return {
             [']C'] = { query = '@class.outer', desc = 'class end' },
             [']I'] = { query = '@conditional.outer', desc = 'conditional/if end' },
             [']L'] = { query = '@loop.outer', desc = 'loop end' },
-            [']G'] = { query = '@feral', desc = 'feral guard' },
           },
           goto_previous_start = {
             ['[f'] = { query = '@call.outer', desc = 'function call' },
@@ -67,7 +62,6 @@ return {
             ['[c'] = { query = '@class.outer', desc = 'class' },
             ['[i'] = { query = '@conditional.outer', desc = 'conditional/if' },
             ['[l'] = { query = '@loop.outer', desc = 'loop' },
-            ['[g'] = { query = '@feral', desc = 'feral guard' },
           },
           goto_previous_end = {
             ['[F'] = { query = '@call.outer', desc = 'funciton call end' },
@@ -75,7 +69,6 @@ return {
             ['[C'] = { query = '@class.outer', desc = 'class end' },
             ['[I'] = { query = '@conditional.outer', desc = 'conditional/if end' },
             ['[L'] = { query = '@loop.outer', desc = 'loop end' },
-            ['[G'] = { query = '@feral', desc = 'feral guard' },
           },
         },
       },
