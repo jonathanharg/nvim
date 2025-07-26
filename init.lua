@@ -91,7 +91,7 @@ vim.g.mapleader = ' '
 vim.g.maplocalleader = ' '
 
 -- Set to true if you have a Nerd Font installed and selected in the terminal
-vim.g.have_nerd_font = false
+vim.g.have_nerd_font = true
 
 -- [[ Setting options ]]
 -- See `:help vim.o`
@@ -102,7 +102,7 @@ vim.g.have_nerd_font = false
 vim.o.number = true
 -- You can also add relative line numbers, to help with jumping.
 --  Experiment for yourself to see if you like it!
--- vim.o.relativenumber = true
+vim.o.relativenumber = true
 
 -- Enable mouse mode, can be useful for resizing splits for example!
 vim.o.mouse = 'a'
@@ -166,6 +166,9 @@ vim.o.scrolloff = 10
 -- See `:help 'confirm'`
 vim.o.confirm = true
 
+vim.o.spell = true
+vim.o.spelllang = 'en_gb'
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -199,6 +202,22 @@ vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right win
 vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
 
+-- Move Lines
+vim.keymap.set('n', '<A-j>', '<cmd>m .+1<cr>==', { desc = 'Move Down' })
+vim.keymap.set('n', '<A-k>', '<cmd>m .-2<cr>==', { desc = 'Move Up' })
+vim.keymap.set('i', '<A-j>', '<esc><cmd>m .+1<cr>==gi', { desc = 'Move Down' })
+vim.keymap.set('i', '<A-k>', '<esc><cmd>m .-2<cr>==gi', { desc = 'Move Up' })
+vim.keymap.set('v', '<A-j>', ":m '>+1<cr>gv=gv", { desc = 'Move Down' })
+vim.keymap.set('v', '<A-k>', ":m '<-2<cr>gv=gv", { desc = 'Move Up' })
+
+-- Center page down and page up commands
+vim.keymap.set('n', '<C-d>', '<C-d>zz')
+vim.keymap.set('n', '<C-u>', '<C-u>zz')
+
+-- Yank, paste and delete from the system clipboard without affecting the Neovim buffers
+vim.keymap.set('x', '<leader>p', [["_dP]], { desc = 'Paste without overwrite' })
+vim.keymap.set('n', '<leader>d', [["_d]], { desc = 'Delete without overwrite' })
+
 -- NOTE: Some terminals have colliding keymaps or are not able to send distinct keycodes
 -- vim.keymap.set("n", "<C-S-h>", "<C-w>H", { desc = "Move window to the left" })
 -- vim.keymap.set("n", "<C-S-l>", "<C-w>L", { desc = "Move window to the right" })
@@ -217,6 +236,11 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   callback = function()
     vim.hl.on_yank()
   end,
+})
+
+-- Don't have `o` add a comment
+vim.api.nvim_create_autocmd('FileType', {
+  command = 'set formatoptions-=o',
 })
 
 -- [[ Install `lazy.nvim` plugin manager ]]
@@ -247,7 +271,9 @@ rtp:prepend(lazypath)
 -- NOTE: Here is where you install your plugins.
 require('lazy').setup({
   -- NOTE: Plugins can be added with a link (or for a github repo: 'owner/repo' link).
-  'NMAC427/guess-indent.nvim', -- Detect tabstop and shiftwidth automatically
+
+  -- Detect tabstop and shiftwidth automatically
+  { 'NMAC427/guess-indent.nvim', opts = { filetype_exclude = { 'c', 'h', 'cpp', 'hpp', 'inl' } } },
 
   -- NOTE: Plugins can also be added by using a table,
   -- with the first argument being the link and the following
@@ -271,18 +297,18 @@ require('lazy').setup({
   -- options to `gitsigns.nvim`.
   --
   -- See `:help gitsigns` to understand what the configuration keys do
-  { -- Adds git related signs to the gutter, as well as utilities for managing changes
-    'lewis6991/gitsigns.nvim',
-    opts = {
-      signs = {
-        add = { text = '+' },
-        change = { text = '~' },
-        delete = { text = '_' },
-        topdelete = { text = '‾' },
-        changedelete = { text = '~' },
-      },
-    },
-  },
+  -- { -- Adds git related signs to the gutter, as well as utilities for managing changes
+  --   'lewis6991/gitsigns.nvim',
+  --   opts = {
+  --     signs = {
+  --       add = { text = '+' },
+  --       change = { text = '~' },
+  --       delete = { text = '_' },
+  --       topdelete = { text = '‾' },
+  --       changedelete = { text = '~' },
+  --     },
+  --   },
+  -- },
 
   -- NOTE: Plugins can also be configured to run Lua code when they are loaded.
   --
@@ -297,6 +323,8 @@ require('lazy').setup({
   --
   -- Then, because we use the `opts` key (recommended), the configuration runs
   -- after the plugin has been loaded as `require(MODULE).setup(opts)`.
+
+  { 'numToStr/Comment.nvim', opts = {} },
 
   { -- Useful plugin to show you pending keybinds.
     'folke/which-key.nvim',
@@ -344,9 +372,22 @@ require('lazy').setup({
 
       -- Document existing key chains
       spec = {
-        { '<leader>s', group = '[S]earch' },
+        { '<leader>s', group = '[S]ession' },
         { '<leader>t', group = '[T]oggle' },
-        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<leader>gh', group = '[G]it [H]unk', mode = { 'n', 'v' } },
+        { '<leader>g', group = '[G]it', mode = { 'n', 'v' } },
+        { '<leader>d', icon = { icon = '', color = 'red' } },
+        { '<leader>f', group = '[F]ind' },
+        { '<leader>h', group = '[H]arpoon', icon = { icon = '󱡅', color = 'orange' } },
+        -- Hide harpoon binds (not alphabetical)
+        { '<leader>hu', hidden = true },
+        { '<leader>hi', hidden = true },
+        { '<leader>ho', hidden = true },
+        { '<leader>hp', hidden = true },
+        { '<leader>u', hidden = true },
+        { '<leader>i', hidden = true },
+        { '<leader>o', hidden = true },
+        { '<leader>p', hidden = true },
       },
     },
   },
@@ -413,9 +454,22 @@ require('lazy').setup({
         --   },
         -- },
         -- pickers = {}
+        defaults = {
+          path_display = { 'truncate' }, -- TODO: Try "smart" and see performance cost
+          layout_config = {
+            prompt_position = 'top',
+          },
+          sorting_strategy = 'ascending',
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
+          },
+          ['fzf'] = {
+            fuzzy = true,
+            override_generic_sorter = true,
+            override_file_sorter = true,
+            case_mode = 'smart_case',
           },
         },
       }
@@ -426,16 +480,22 @@ require('lazy').setup({
 
       -- See `:help telescope.builtin`
       local builtin = require 'telescope.builtin'
-      vim.keymap.set('n', '<leader>sh', builtin.help_tags, { desc = '[S]earch [H]elp' })
-      vim.keymap.set('n', '<leader>sk', builtin.keymaps, { desc = '[S]earch [K]eymaps' })
-      vim.keymap.set('n', '<leader>sf', builtin.find_files, { desc = '[S]earch [F]iles' })
-      vim.keymap.set('n', '<leader>ss', builtin.builtin, { desc = '[S]earch [S]elect Telescope' })
-      vim.keymap.set('n', '<leader>sw', builtin.grep_string, { desc = '[S]earch current [W]ord' })
-      vim.keymap.set('n', '<leader>sg', builtin.live_grep, { desc = '[S]earch by [G]rep' })
-      vim.keymap.set('n', '<leader>sd', builtin.diagnostics, { desc = '[S]earch [D]iagnostics' })
-      vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
-      vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
+      vim.keymap.set('n', '<leader>fh', builtin.help_tags, { desc = '[F]ind in [H]elp' })
+      vim.keymap.set('n', '<leader>fk', builtin.keymaps, { desc = '[F]ind [K]eymaps' })
+      vim.keymap.set('n', '<leader>ff', builtin.find_files, { desc = '[F]ind [F]iles' })
+      vim.keymap.set('n', '<leader>fs', builtin.builtin, { desc = '[F]ind Telescope' })
+      vim.keymap.set('n', '<leader>fw', builtin.grep_string, { desc = '[F]ind Current [W]ord' })
+      vim.keymap.set('n', '<leader>fW', function()
+        builtin.grep_string {
+          search = vim.fn.expand '<cWORD>',
+        }
+      end, { desc = '[F]ind Current [W]ord' })
+      vim.keymap.set('n', '<leader>fG', builtin.live_grep, { desc = '[F]ind with [G]rep' })
+      vim.keymap.set('n', '<leader>fd', builtin.diagnostics, { desc = '[F]ind [D]iagnostics' })
+      vim.keymap.set('n', '<leader>fr', builtin.resume, { desc = '[R]esume Search' })
+      vim.keymap.set('n', '<leader>f.', builtin.oldfiles, { desc = '[F]ind Recent Files' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>fg', builtin.git_status, { desc = 'Find in Git' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -448,17 +508,17 @@ require('lazy').setup({
 
       -- It's also possible to pass additional configuration options.
       --  See `:help telescope.builtin.live_grep()` for information about particular keys
-      vim.keymap.set('n', '<leader>s/', function()
+      vim.keymap.set('n', '<leader>f/', function()
         builtin.live_grep {
           grep_open_files = true,
           prompt_title = 'Live Grep in Open Files',
         }
-      end, { desc = '[S]earch [/] in Open Files' })
+      end, { desc = '[F]ind [/] in Open Files' })
 
       -- Shortcut for searching your Neovim configuration files
-      vim.keymap.set('n', '<leader>sn', function()
+      vim.keymap.set('n', '<leader>fn', function()
         builtin.find_files { cwd = vim.fn.stdpath 'config' }
-      end, { desc = '[S]earch [N]eovim files' })
+      end, { desc = '[F]ind [N]eovim files' })
     end,
   },
 
@@ -698,6 +758,17 @@ require('lazy').setup({
             },
           },
         },
+
+        clangd = {
+          cmd = {
+            'clangd',
+            '--limit-references=0',
+            '--limit-results=0',
+          },
+        },
+        pyright = {},
+        rust_analyzer = {},
+        ts_ls = {},
       }
 
       -- Ensure the servers and tools above are installed
@@ -742,12 +813,12 @@ require('lazy').setup({
     cmd = { 'ConformInfo' },
     keys = {
       {
-        '<leader>f',
+        'grf',
         function()
           require('conform').format { async = true, lsp_format = 'fallback' }
         end,
         mode = '',
-        desc = '[F]ormat buffer',
+        desc = 'LSP: [F]ormat buffer',
       },
     },
     opts = {
@@ -769,7 +840,7 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         -- Conform can also run multiple formatters sequentially
-        -- python = { "isort", "black" },
+        python = { 'isort', 'black' },
         --
         -- You can use 'stop_after_first' to run the first available formatter from the list
         -- javascript = { "prettierd", "prettier", stop_after_first = true },
@@ -799,14 +870,21 @@ require('lazy').setup({
           -- `friendly-snippets` contains a variety of premade snippets.
           --    See the README about individual language/framework/plugin snippets:
           --    https://github.com/rafamadriz/friendly-snippets
-          -- {
-          --   'rafamadriz/friendly-snippets',
-          --   config = function()
-          --     require('luasnip.loaders.from_vscode').lazy_load()
-          --   end,
-          -- },
+          {
+            'rafamadriz/friendly-snippets',
+            config = function()
+              require('luasnip.loaders.from_vscode').lazy_load()
+            end,
+          },
         },
-        opts = {},
+        config = function()
+          require('luasnip').setup {
+            update_events = { 'TextChanged', 'TextChangedI' },
+            cut_selection_keys = '<Tab>',
+            enable_autosnippets = true,
+          }
+          require('luasnip.loaders.from_lua').load { paths = './lua/snippets' }
+        end,
       },
       'folke/lazydev.nvim',
     },
@@ -942,9 +1020,42 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     main = 'nvim-treesitter.configs', -- Sets main module to use for opts
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter-textobjects',
+    },
     -- [[ Configure Treesitter ]] See `:help nvim-treesitter`
     opts = {
-      ensure_installed = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' },
+      ensure_installed = {
+        'asm',
+        'bash',
+        'c',
+        'cmake',
+        'cpp',
+        'css',
+        'disassembly',
+        'diff',
+        'fish',
+        'git_config',
+        'git_rebase',
+        'gitattributes',
+        'gitcommit',
+        'gitignore',
+        'glsl',
+        'html',
+        'hlsl',
+        'json',
+        'lua',
+        'luadoc',
+        'make',
+        'markdown',
+        'markdown_inline',
+        'objc',
+        'printf',
+        'query',
+        'regex',
+        'vim',
+        'vimdoc',
+      },
       -- Autoinstall languages that are not installed
       auto_install = true,
       highlight = {
@@ -955,6 +1066,18 @@ require('lazy').setup({
         additional_vim_regex_highlighting = { 'ruby' },
       },
       indent = { enable = true, disable = { 'ruby' } },
+      incremental_selection = {
+        enable = true,
+        keymaps = {
+          -- WARN: For MacOS go to System Settings > Keyboard > Keyboard Shortcuts... > Input Sources
+          -- and disable 'Select the previous input source' and 'Select next source in Input menu'
+          -- otherwise keybinds will conflict
+          init_selection = '<C-space>',
+          node_incremental = '<C-space>',
+          scope_incremental = false,
+          node_decremental = '<bs>',
+        },
+      },
     },
     -- There are additional nvim-treesitter modules that you can use to interact
     -- with nvim-treesitter. You should go explore a few and see what interests you:
@@ -973,12 +1096,12 @@ require('lazy').setup({
   --  Here are some example plugins that I've included in the Kickstart repository.
   --  Uncomment any of the lines below to enable them (you will need to restart nvim).
   --
-  -- require 'kickstart.plugins.debug',
-  -- require 'kickstart.plugins.indent_line',
-  -- require 'kickstart.plugins.lint',
+  require 'kickstart.plugins.debug',
+  require 'kickstart.plugins.indent_line',
+  require 'kickstart.plugins.lint',
   -- require 'kickstart.plugins.autopairs',
   -- require 'kickstart.plugins.neo-tree',
-  -- require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
+  require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
   --    This is the easiest way to modularize your config.
@@ -990,6 +1113,7 @@ require('lazy').setup({
   -- Or use telescope!
   -- In normal mode type `<space>sh` then write `lazy.nvim-plugin`
   -- you can continue same window with `<space>sr` which resumes last telescope search
+  { import = 'custom.plugins' },
 }, {
   ui = {
     -- If you are using a Nerd Font: set icons to an empty table which will use the
